@@ -22,13 +22,16 @@ class CMHBot(DiscordClient, metaclass=Singleton):
             await self._process(message)
 
     async def _process(self, message: Message) -> None:
+        # Do not reply for own messages.
         if message.author == self.user:
             return
 
+        # Command matching.
         action = self._actions.get(message.content)
         if not action:
             return
 
+        # If the message represents a command, execute it.
         await action(message)
 
     async def _on_ping(self, message: Message) -> None:
