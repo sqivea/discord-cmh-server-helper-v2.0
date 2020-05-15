@@ -14,6 +14,7 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         # and bot's reactions for that commands.
         self._actions = {
             Commands.PING: self._on_ping,
+            Commands.INFO: self._on_info,
             Commands.DIE: self._on_die
         }
 
