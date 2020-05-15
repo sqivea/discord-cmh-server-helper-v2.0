@@ -3,6 +3,7 @@ from discord import Client as DiscordClient
 from discord.message import Message
 
 from .commands import Commands
+from .constants import Replies
 
 
 class CMHBot(DiscordClient, metaclass=Singleton):
@@ -35,8 +36,11 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         await action(message)
 
     async def _on_ping(self, message: Message) -> None:
-        await message.channel.send('Pong')
+        await message.channel.send(Replies.ON_PING)
+
+    async def _on_info(self, message: Message) -> None:
+        await message.channel.send(Replies.ON_INFO)
 
     async def _on_die(self, message: Message) -> None:
-        await message.channel.send('Shutting down')
+        await message.channel.send(Replies.ON_DIE)
         await self.close()
