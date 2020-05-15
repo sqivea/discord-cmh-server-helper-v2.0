@@ -1,5 +1,3 @@
-from sys import exit as close_process
-
 from singletons import Singleton
 from discord import Client as DiscordClient
 from discord.message import Message
@@ -39,4 +37,3 @@ class CMHBot(DiscordClient, metaclass=Singleton):
     async def _on_die(self, message: Message) -> None:
         await message.channel.send('Shutting down')
         await self.close()
-        close_process(0)
