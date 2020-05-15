@@ -12,4 +12,5 @@ class CMHBot(DiscordClient, metaclass=Singleton):
             await self._process(message)
 
     async def _process(self, message: Message) -> None:
-        pass
+        if message.author == self.user:
+            return
