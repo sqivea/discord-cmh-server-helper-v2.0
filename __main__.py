@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
-import sys
+import env  # noqa, used for loading the environment variables.
 
 
-def main(argv=None) -> None:
-    if argv is None:
-        argv = []
+def main() -> None:
+    pass
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main()
