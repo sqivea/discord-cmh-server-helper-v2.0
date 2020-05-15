@@ -13,7 +13,6 @@ class CMHBot(DiscordClient, metaclass=Singleton):
 
         # Pairs of commands string representations
         # and bot's reactions for that commands.
-        # type: Dict[AnyStr, Callable]
         self._actions = {
             Commands.PING: self._on_ping,
             Commands.DIE: self._on_die
@@ -27,6 +26,12 @@ class CMHBot(DiscordClient, metaclass=Singleton):
     async def _process(self, message: Message) -> None:
         if message.author == self.user:
             return
+
+        action = self._actions.get(message.content)
+        if not action:
+            return
+
+        await action(message)
 
     async def _on_ping(self, message: Message) -> None:
         await message.channel.send('Pong')
