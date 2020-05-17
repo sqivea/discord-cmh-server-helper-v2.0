@@ -84,7 +84,7 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         ])
         if param not in named_param_actions[command].params:
             raise WrongParamCommandError(
-                'There is no parameter: {}'.format(param)
+                '{}: {}'.format(Replies.ON_WRONG_PARAM, param)
             )
 
     async def _on_switch(self, message: Message) -> None:
