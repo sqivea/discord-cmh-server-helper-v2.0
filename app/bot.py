@@ -29,12 +29,16 @@ class CMHBot(DiscordClient, metaclass=Singleton):
             return
 
         # Command matching.
-        action = self._actions.get(message.content)
+        content = self._get_processed_content(message.content)
+        action = self._actions.get(content)
         if not action:
             return
 
         # If the message represents a command, execute it.
         await action(message)
+
+    def _get_processed_content(self, message: str) -> str:
+        return ' '.join(message.split())
 
     async def _on_ping(self, message: Message) -> None:
         await message.channel.send(Replies.ON_PING)
