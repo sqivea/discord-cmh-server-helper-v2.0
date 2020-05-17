@@ -1,11 +1,12 @@
+from typing import Callable
+
 from singletons import Singleton
 from discord import Client as DiscordClient
 from discord.message import Message
 
 from .commands import Commands, ParamCommands
+from .errors import WrongParamCommandError
 from .constants import Replies
-
-import app.errors as errors
 
 
 class CMHBot(DiscordClient, metaclass=Singleton):
@@ -59,14 +60,17 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         await message.channel.send(Replies.ON_DIE)
         await self.close()
 
-    async def _find_param_command(self, message: Message) -> None:
-        tokens = message.split()
+    async def _find_param_command(self, message: Message) -> Callable:
+        command, param = message.split()
         param_action = dict([
             (command_object.command, reaction)
             for command_object, reaction in self._param_actions.items()
-        ]).get(tokens[0])
+        ]).get(command)
         if not param_action:
-            return
+            return None
+        else:
+            self._check_param(command, param)
+            return param_action
 
     async def _check_param(self, command: str, param: str) -> None:
         named_param_actions = dict([
@@ -74,7 +78,7 @@ class CMHBot(DiscordClient, metaclass=Singleton):
             for command_object in self._param_actions.keys()
         ])
         if param not in named_param_actions[command].params:
-            raise errors.WrongParamCommandError()
+            raise WrongParamCommandError()
 
     async def _on_switch(self, message: Message) -> None:
         pass
