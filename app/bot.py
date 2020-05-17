@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import List, Callable
 
 from singletons import Singleton
 from discord import Client as DiscordClient
@@ -26,8 +26,10 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         # Pairs of commands strings representations
         # and their parameters which will then be processed.
         SWITCH_LANG = ParamCommands.SWITCH_LANG
+        DELETE_MSGS = ParamCommands.DELETE_MSGS
         self._param_actions = {
-            SWITCH_LANG: lambda command: self._on_switch(command)
+            SWITCH_LANG: lambda command: self._on_switch(command),
+            DELETE_MSGS: lambda command: self._on_delete(command)
         }
 
         # Message handling decorator.
@@ -96,3 +98,22 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         await message.channel.send(
             '{} `{}`'.format(Replies.ON_CURRENT_LOCALE, switched_locale)
         )
+
+    async def _on_delete(self, message: Message) -> None:
+        command, param = message.content.split()
+        limit = {
+            '--10': 10,
+            '--50': 50,
+            '--100': 100,
+            '--all': None
+        }[param]
+        to_delete: List[Message] = []
+        counter = 0
+        async for old_one in message.channel.history(limit=None):
+            if limit and counter == limit:
+                break
+            elif old_one.author.id == message.author.id:
+                to_delete.append(old_one)
+                counter += 1
+
+        await message.channel.delete_messages(to_delete)
