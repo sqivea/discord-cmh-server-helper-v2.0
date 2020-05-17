@@ -12,5 +12,5 @@ class Commands:
 class ParamCommands:
     _schema = namedtuple('ParamsCommand', ['command', 'params'])
     SWITCH_LANG = _schema._make([
-        'SWITCH_LANG', ('--en-us', '--ru-ru', )
+        '!lang', ('--en-us', '--ru-ru', )
     ])
