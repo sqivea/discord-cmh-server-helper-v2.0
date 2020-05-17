@@ -43,7 +43,7 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         action = self._actions.get(content)
         if not action:
             try:
-                action = self._find_param_command(content)
+                action = await self._find_param_command(content)
             except WrongParamCommandError as ex:
                 await message.channel.send(ex.message)
         if not action:
@@ -74,7 +74,7 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         if not param_action:
             return None
         else:
-            self._check_param(command, param)
+            await self._check_param(command, param)
             return param_action
 
     async def _check_param(self, command: str, param: str) -> None:
