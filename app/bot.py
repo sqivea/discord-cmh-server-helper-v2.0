@@ -86,9 +86,13 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         ])
         if param not in named_param_actions[command]:
             raise WrongParamCommandError(
-                '{}: {}'.format(Replies.ON_WRONG_PARAM, param)
+                '{}: `{}`'.format(Replies.ON_WRONG_PARAM, param)
             )
 
     async def _on_switch(self, message: Message) -> None:
         _, locale_param = self._get_processed_content(message.content).split()
-        LangController.translator.switch(locale_param.replace('--', ''))
+        switched_locale = locale_param.replace('--', '')
+        LangController.translator.switch(switched_locale)
+        await message.channel.send(
+            '{} `{}`'.format(Replies.ON_CURRENT_LOCALE, switched_locale)
+        )

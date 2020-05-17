@@ -31,3 +31,8 @@ class Replies:
     @classmethod
     def ON_WRONG_PARAM(cls) -> str:
         return '`{}`'.format(LangController.translator['ON_WRONG_PARAM'])
+
+    @classProperty
+    @classmethod
+    def ON_CURRENT_LOCALE(cls) -> str:
+        return '`{}`'.format(LangController.translator['ON_CURRENT_LOCALE'])
