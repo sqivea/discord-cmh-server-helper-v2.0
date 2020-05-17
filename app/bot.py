@@ -22,7 +22,7 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         # and their parameters which will then be processed.
         SWITCH_LANG = ParamCommands.SWITCH_LANG
         self._param_actions = {
-            SWITCH_LANG.command: SWITCH_LANG.params
+            SWITCH_LANG: lambda command: self._on_switch(command)
         }
 
         # Message handling decorator.
@@ -57,8 +57,14 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         await message.channel.send(Replies.ON_DIE)
         await self.close()
 
-    async def _find_composite_command(self, message: Message) -> None:
-        pass
+    async def _find_param_command(self, message: Message) -> None:
+        tokens = message.split()
+        param_action = dict([
+            (command_object.command, reaction)
+            for command_object, reaction in self._param_actions.items()
+        ]).get(tokens[0])
+        if not param_action:
+            return
 
     async def _on_switch(self, message: Message) -> None:
         pass
