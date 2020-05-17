@@ -13,7 +13,7 @@ class Commands:
 class ParamCommands:
     _schema = namedtuple('ParamsCommand', ['command', 'params'])
     SWITCH_LANG = _schema._make([
-        '!lang', ('--en-us', '--ru-ru', )
+        '!lang', ('--en-us', '--ru-ru', '--uk-ua', )
     ])
     DELETE_MSGS = _schema._make([
         '!clear', ('--10', '--50', '--100', '--all')
