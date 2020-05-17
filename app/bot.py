@@ -5,7 +5,7 @@ from discord import Client as DiscordClient
 from discord.message import Message
 
 from .commands import Commands, ParamCommands
-from .errors import WrongParamCommandError
+from .errors import WrongParamCommandError, NoParamCommandError
 from .replies import Replies
 
 from .lang_controller import LangController
@@ -50,6 +50,8 @@ class CMHBot(DiscordClient, metaclass=Singleton):
                 action = await self._find_param_command(content)
             except WrongParamCommandError as ex:
                 await message.channel.send(str(ex))
+            except NoParamCommandError as ex:
+                await message.channel.send(str(ex))
         if not action:
             return
 
@@ -68,28 +70,6 @@ class CMHBot(DiscordClient, metaclass=Singleton):
     async def _on_die(self, message: Message) -> None:
         await message.channel.send(Replies.ON_DIE)
         await self.close()
-
-    async def _find_param_command(self, message: Message) -> Callable:
-        command, param = message.split()
-        param_action = dict([
-            (command_object.command, reaction)
-            for command_object, reaction in self._param_actions.items()
-        ]).get(command)
-        if not param_action:
-            return None
-        else:
-            await self._check_param(command, param)
-            return param_action
-
-    async def _check_param(self, command: str, param: str) -> None:
-        named_param_actions = dict([
-            (command_object.command, command_object.params)
-            for command_object in self._param_actions.keys()
-        ])
-        if param not in named_param_actions[command]:
-            raise WrongParamCommandError(
-                '{}: `{}`'.format(Replies.ON_WRONG_PARAM, param)
-            )
 
     async def _on_switch(self, message: Message) -> None:
         _, locale_param = self._get_processed_content(message.content).split()
@@ -117,3 +97,39 @@ class CMHBot(DiscordClient, metaclass=Singleton):
                 counter += 1
 
         await message.channel.delete_messages(to_delete)
+
+    async def _find_param_command(self, message: str) -> Callable:
+        try:
+            command, param = message.split()
+        except ValueError:
+            param_action = await self._get_param_action(message)
+            if not param_action:
+                return None
+            else:
+                # Reraise the exception with additional info.
+                raise NoParamCommandError(
+                    '{}'.format(Replies.ON_PARAM_NOT_PRESENT)
+                )
+
+        param_action = await self._get_param_action(command)
+        if not param_action:
+            return None
+        else:
+            await self._check_param(command, param)
+            return param_action
+
+    async def _get_param_action(self, command: str) -> Callable:
+        return dict([
+            (command_object.command, reaction)
+            for command_object, reaction in self._param_actions.items()
+        ]).get(command)
+
+    async def _check_param(self, command: str, param: str) -> None:
+        named_param_actions = dict([
+            (command_object.command, command_object.params)
+            for command_object in self._param_actions.keys()
+        ])
+        if param not in named_param_actions[command]:
+            raise WrongParamCommandError(
+                '{}: `{}`'.format(Replies.ON_WRONG_PARAM, param)
+            )
