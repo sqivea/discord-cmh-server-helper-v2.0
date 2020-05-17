@@ -90,5 +90,5 @@ class CMHBot(DiscordClient, metaclass=Singleton):
             )
 
     async def _on_switch(self, message: Message) -> None:
-        _, locale_param = message.content.split()
+        _, locale_param = self._get_processed_content(message.content).split()
         LangController.translator.switch(locale_param.replace('--', ''))
