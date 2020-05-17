@@ -42,6 +42,11 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         content = self._get_processed_content(message.content)
         action = self._actions.get(content)
         if not action:
+            try:
+                action = self._find_param_command(content)
+            except WrongParamCommandError as ex:
+                await message.channel.send(ex.message)
+        if not action:
             return
 
         # If the message represents a command, execute it.
@@ -78,7 +83,9 @@ class CMHBot(DiscordClient, metaclass=Singleton):
             for command_object in self._param_actions.keys()
         ])
         if param not in named_param_actions[command].params:
-            raise WrongParamCommandError()
+            raise WrongParamCommandError(
+                'There is no parameter: {}'.format(param)
+            )
 
     async def _on_switch(self, message: Message) -> None:
         pass
