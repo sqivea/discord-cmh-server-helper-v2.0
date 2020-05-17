@@ -5,5 +5,5 @@ class LangController:
     translator = PyLocale(
         at='assets/translations',
         root='en-us',
-        silent=True
+        silent=False
     )

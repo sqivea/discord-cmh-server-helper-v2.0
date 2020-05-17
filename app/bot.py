@@ -8,6 +8,8 @@ from .commands import Commands, ParamCommands
 from .errors import WrongParamCommandError
 from .constants import Replies
 
+from .lang_controller import LangController
+
 
 class CMHBot(DiscordClient, metaclass=Singleton):
     def __init__(self, **options) -> None:
@@ -88,4 +90,5 @@ class CMHBot(DiscordClient, metaclass=Singleton):
             )
 
     async def _on_switch(self, message: Message) -> None:
-        pass
+        _, locale_param = message.content.split()
+        LangController.translator.switch(locale_param.replace('--', ''))
