@@ -6,7 +6,7 @@ from discord.message import Message
 
 from .commands import Commands, ParamCommands
 from .errors import WrongParamCommandError
-from .constants import Replies
+from .replies import Replies
 
 from .lang_controller import LangController
 
