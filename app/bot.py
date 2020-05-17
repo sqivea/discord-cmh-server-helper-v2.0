@@ -1,7 +1,7 @@
 from typing import List, Callable
 
 from singletons import Singleton
-from discord import Client as DiscordClient
+from discord import Status, Client as DiscordClient
 from discord.message import Message
 
 from .commands import Commands, ParamCommands
@@ -20,6 +20,7 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         self._actions = {
             Commands.PING: self._on_ping,
             Commands.INFO: self._on_info,
+            Commands.CALL: self._on_call,
             Commands.DIE: self._on_die
         }
 
@@ -66,6 +67,25 @@ class CMHBot(DiscordClient, metaclass=Singleton):
 
     async def _on_info(self, message: Message) -> None:
         await message.channel.send(Replies.ON_INFO)
+
+    async def _on_call(self, message: Message) -> None:
+        members = message.channel.members
+        ping_list: List[str] = []
+        for member in members:
+            if all([
+                not member.bot,
+                member.status != Status.offline,
+                member.id != message.author.id
+            ]):
+                ping_list.append('@{}'.format(member.nick))
+        if not ping_list:
+            await message.channel.send(Replies.ON_NOBODY_ONLINE)
+        else:
+            who_are_asked = '\n'.join(ping_list)
+            what_to_say = Replies.ON_SOMEBODY_ONLINE
+            await message.channel.send(
+                '{}\n{}'.format(who_are_asked, what_to_say)
+            )
 
     async def _on_die(self, message: Message) -> None:
         await message.channel.send(Replies.ON_DIE)

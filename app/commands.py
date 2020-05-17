@@ -5,6 +5,7 @@ from collections import namedtuple
 class Commands:
     PING = '!ping'
     INFO = '!info'
+    CALL = '!call'
     DIE = '!die'
 
 

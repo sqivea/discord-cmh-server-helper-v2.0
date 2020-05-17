@@ -41,3 +41,13 @@ class Replies:
     @classmethod
     def ON_CURRENT_LOCALE(cls) -> str:
         return '`{}`'.format(LangController.translator['ON_CURRENT_LOCALE'])
+
+    @classProperty
+    @classmethod
+    def ON_NOBODY_ONLINE(cls) -> str:
+        return '`{}`'.format(LangController.translator['ON_NOBODY_ONLINE'])
+
+    @classProperty
+    @classmethod
+    def ON_SOMEBODY_ONLINE(cls) -> str:
+        return '`{}`'.format(LangController.translator['ON_SOMEBODY_ONLINE'])
