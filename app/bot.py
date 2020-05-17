@@ -2,7 +2,7 @@ from singletons import Singleton
 from discord import Client as DiscordClient
 from discord.message import Message
 
-from .commands import Commands
+from .commands import Commands, ParamCommands
 from .constants import Replies
 
 
@@ -16,6 +16,10 @@ class CMHBot(DiscordClient, metaclass=Singleton):
             Commands.PING: self._on_ping,
             Commands.INFO: self._on_info,
             Commands.DIE: self._on_die
+        }
+
+        self._param_actions = {
+            ParamCommands.SWITCH_LANG.command: ParamCommands.SWITCH_LANG.params
         }
 
         # Message handling decorator.
@@ -49,3 +53,9 @@ class CMHBot(DiscordClient, metaclass=Singleton):
     async def _on_die(self, message: Message) -> None:
         await message.channel.send(Replies.ON_DIE)
         await self.close()
+
+    async def _find_composite_command(self, message: Message) -> None:
+        pass
+
+    async def _on_switch(self, message: Message) -> None:
+        pass
