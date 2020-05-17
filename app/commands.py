@@ -8,6 +8,7 @@ class Commands:
     DIE = '!die'
 
 
+# String representations for the bot's parametrized commands.
 class ParamCommands:
     _schema = namedtuple('ParamsCommand', ['command', 'params'])
     SWITCH_LANG = _schema._make([

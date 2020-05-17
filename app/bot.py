@@ -11,15 +11,18 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         super().__init__(**options)
 
         # Pairs of commands string representations
-        # and bot's reactions for that commands.
+        # and bot's explicit reactions for those commands.
         self._actions = {
             Commands.PING: self._on_ping,
             Commands.INFO: self._on_info,
             Commands.DIE: self._on_die
         }
 
+        # Pairs of commands strings representations
+        # and their parameters which will then be processed.
+        SWITCH_LANG = ParamCommands.SWITCH_LANG
         self._param_actions = {
-            ParamCommands.SWITCH_LANG.command: ParamCommands.SWITCH_LANG.params
+            SWITCH_LANG.command: SWITCH_LANG.params
         }
 
         # Message handling decorator.
