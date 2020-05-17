@@ -34,5 +34,10 @@ class Replies:
 
     @classProperty
     @classmethod
+    def ON_PARAM_NOT_PRESENT(cls) -> str:
+        return '`{}`'.format(LangController.translator['ON_PARAM_NOT_PRESENT'])
+
+    @classProperty
+    @classmethod
     def ON_CURRENT_LOCALE(cls) -> str:
         return '`{}`'.format(LangController.translator['ON_CURRENT_LOCALE'])
