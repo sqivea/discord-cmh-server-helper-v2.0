@@ -5,6 +5,8 @@ from discord.message import Message
 from .commands import Commands, ParamCommands
 from .constants import Replies
 
+import app.errors as errors
+
 
 class CMHBot(DiscordClient, metaclass=Singleton):
     def __init__(self, **options) -> None:
@@ -65,6 +67,14 @@ class CMHBot(DiscordClient, metaclass=Singleton):
         ]).get(tokens[0])
         if not param_action:
             return
+
+    async def _check_param(self, command: str, param: str) -> None:
+        named_param_actions = dict([
+            (command_object.command, command_object.params)
+            for command_object in self._param_actions.keys()
+        ])
+        if param not in named_param_actions[command].params:
+            raise errors.WrongParamCommandError()
 
     async def _on_switch(self, message: Message) -> None:
         pass
