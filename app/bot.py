@@ -77,7 +77,7 @@ class CMHBot(DiscordClient, metaclass=Singleton):
                 member.status != Status.offline,
                 member.id != message.author.id
             ]):
-                ping_list.append('@{}'.format(member.nick))
+                ping_list.append('@{}'.format(member.mention))
         if not ping_list:
             await message.channel.send(Replies.ON_NOBODY_ONLINE)
         else:
