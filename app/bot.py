@@ -45,7 +45,7 @@ class CMHBot(DiscordClient, metaclass=Singleton):
             try:
                 action = await self._find_param_command(content)
             except WrongParamCommandError as ex:
-                await message.channel.send(ex.message)
+                await message.channel.send(str(ex))
         if not action:
             return
 
@@ -82,7 +82,7 @@ class CMHBot(DiscordClient, metaclass=Singleton):
             (command_object.command, command_object.params)
             for command_object in self._param_actions.keys()
         ])
-        if param not in named_param_actions[command].params:
+        if param not in named_param_actions[command]:
             raise WrongParamCommandError(
                 '{}: {}'.format(Replies.ON_WRONG_PARAM, param)
             )
