@@ -14,3 +14,6 @@ class ParamCommands:
     SWITCH_LANG = _schema._make([
         '!lang', ('--en-us', '--ru-ru', )
     ])
+    DELETE_MSGS = _schema._make([
+        '!clear', ('--10', '--50', '--100', '--all')
+    ])
